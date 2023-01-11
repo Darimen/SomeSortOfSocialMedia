@@ -52,21 +52,20 @@ public class DatabaseCon {
         }
     }
 
-    public int executeSelection(String query, Object[] var, int col){
+    public int executeSelection(String query, Object[] var, int col) {
+        int index = 0;
         try {
-            int index=0;
             Class.forName(driver);
-            connection= DriverManager.getConnection(URL, user, password);
-            statement= connection.createStatement();
-            resultSet= statement.executeQuery(query);
-            while(resultSet.next()){
-                var[index++]=resultSet.getObject(col);
+            connection = DriverManager.getConnection(URL, user, password);
+            statement = connection.createStatement();
+            resultSet = statement.executeQuery(query);
+            while (resultSet.next()) {
+                var[index++] = resultSet.getObject(col);
             }
             connection.close();
             return index;
-        } catch (Exception e){
-            e.printStackTrace();
+        } catch (Exception e) {
+            return index;
         }
-    return 0;
     }
 }
