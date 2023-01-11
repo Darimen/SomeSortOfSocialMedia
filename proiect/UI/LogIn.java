@@ -6,8 +6,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.sql.Connection;
-import java.util.Arrays;
+import java.sql.*;
 import java.util.Objects;
 
 
@@ -323,14 +322,37 @@ public class LogIn extends JPanel {
         ActionListener signUp = new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                int id=0;
-                String idQ="Select user_id FROM user";
-                id=db.executeSelection(idQ,null,1);
-                String query= "Insert into table user values(" + id + ", '" +lastName.getText()+ "', "+ firstName.getText()+ "'," +
+                int id=1;
+                String idQ="select max(user_id) as \"user_id\" from \"user\";";
+                try{
+                    Class.forName("org.postgresql.Driver");
+                    Connection connection= DriverManager.getConnection("jdbc:postgresql://localhost:5432/social_media", "postgres", "darius2002");
+                    Statement statement= connection.createStatement();
+                    ResultSet rs= statement.executeQuery(idQ);
+                    while(rs.next()){
+                        id+=rs.getInt("user_id");
+
+                    }
+                    connection.close();
+                } catch (ClassNotFoundException | SQLException ex) {
+                    ex.printStackTrace();
+                    //throw new RuntimeException(ex);
+                }
+                //System.out.println(id);
+                String query= "insert into \"public\".\"user\" values(" + id + ", '" +lastName.getText()+ "', '"+ firstName.getText()+ "'," +
                         "to_date('"+ datepicker.getDayField().getText()+ "."+datepicker.getMonthField().getText()+"."+
-                        datepicker.getYearField().getText()+"', 'DD/MM/YYYY'), '"+ sex.getSelectedItem()+"', '"+
+                        datepicker.getYearField().getText()+"', 'DD.MM.YYYY'), '"+ sex.getSelectedItem()+"', '"+
                         email.getText()+"', '"+password.getText()+"');";
-                db.executeQuery(query);
+                try{
+                    Class.forName("org.postgresql.Driver");
+                    Connection connection= DriverManager.getConnection("jdbc:postgresql://localhost:5432/social_media", "postgres", "darius2002");
+                    Statement statement= connection.createStatement();
+                    statement.execute(query);
+                    connection.close();
+                } catch (ClassNotFoundException | SQLException ex) {
+                    ex.printStackTrace();
+                    //throw new RuntimeException(ex);
+                }
             }
         };
         this.signUp.addActionListener(signUp);
