@@ -4,7 +4,7 @@ import java.sql.*;
 
 public class DatabaseCon {
     static final String driver="org.postgresql.Driver";
-    static final String URL="jdbc:postgresql://localhost:5432/birthdays";
+    static final String URL="jdbc:postgresql://localhost:5432/social_media";
     static final String user="postgres";
     static final String password="darius2002";
 
@@ -66,6 +66,20 @@ public class DatabaseCon {
             return index;
         } catch (Exception e) {
             return index;
+        }
+    }
+    public void oneString(String query, String sol, int col) {
+        try {
+            Class.forName(driver);
+            connection = DriverManager.getConnection(URL, user, password);
+            statement = connection.createStatement();
+            resultSet = statement.executeQuery(query);
+            while (resultSet.next()) {
+                sol=resultSet.getString(col);
+            }
+            connection.close();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }

@@ -11,7 +11,8 @@ import java.util.Objects;
 
 
 public class LogIn extends JPanel {
-    DatabaseCon db=new DatabaseCon();
+    //DatabaseCon db=new DatabaseCon();
+
     JButton logIn=new JButton("LogIN");
     JButton signUp= new JButton("SignUP");
     JTextField emailLog=new JTextField("email", 40);
@@ -129,7 +130,7 @@ public class LogIn extends JPanel {
             @Override
             public void mouseClicked(MouseEvent e) {
                 if(Objects.equals(emailLog.getText(), "")) {
-                    emailLog.setText("Email");
+                    emailLog.setText("email");
                 }
                 if(Objects.equals(passwordLog.getText(), "password")){
                     passwordLog.setText("");
@@ -301,6 +302,12 @@ public class LogIn extends JPanel {
         setGBC(c, 2,1,1,1);
         add(passwordLog,c);
         setGBC(c,2,2,1,1);
+        logIn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+            }
+        });
         add(logIn,c);
         setGBC(c, 0,3,1,1);
 
@@ -322,36 +329,46 @@ public class LogIn extends JPanel {
         ActionListener signUp = new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                int id=1;
-                String idQ="select max(user_id) as \"user_id\" from \"user\";";
-                try{
-                    Class.forName("org.postgresql.Driver");
-                    Connection connection= DriverManager.getConnection("jdbc:postgresql://localhost:5432/social_media", "postgres", "darius2002");
-                    Statement statement= connection.createStatement();
-                    ResultSet rs= statement.executeQuery(idQ);
-                    while(rs.next()){
-                        id+=rs.getInt("user_id");
-
-                    }
-                    connection.close();
-                } catch (ClassNotFoundException | SQLException ex) {
-                    ex.printStackTrace();
-                    //throw new RuntimeException(ex);
+                if(!email.getText().contains("@")){
+                    JOptionPane.showMessageDialog(null, "Please input a valid email!");
                 }
-                //System.out.println(id);
-                String query= "insert into \"public\".\"user\" values(" + id + ", '" +lastName.getText()+ "', '"+ firstName.getText()+ "'," +
-                        "to_date('"+ datepicker.getDayField().getText()+ "."+datepicker.getMonthField().getText()+"."+
-                        datepicker.getYearField().getText()+"', 'DD.MM.YYYY'), '"+ sex.getSelectedItem()+"', '"+
-                        email.getText()+"', '"+password.getText()+"');";
-                try{
-                    Class.forName("org.postgresql.Driver");
-                    Connection connection= DriverManager.getConnection("jdbc:postgresql://localhost:5432/social_media", "postgres", "darius2002");
-                    Statement statement= connection.createStatement();
-                    statement.execute(query);
-                    connection.close();
-                } catch (ClassNotFoundException | SQLException ex) {
-                    ex.printStackTrace();
-                    //throw new RuntimeException(ex);
+                else if(Objects.equals(datepicker.getYearField().getText(), "") ||Objects.equals(datepicker.getDayField().getText(), "") ||
+                        Objects.equals(datepicker.getMonthField().getText(), "")){
+                    JOptionPane.showMessageDialog(null, "Please input a valid date!");
+                }
+                else {
+                    int id = 1;
+                    String idQ = "select max(user_id) as \"user_id\" from \"user\";";
+                    try {
+                        Class.forName("org.postgresql.Driver");
+                        Connection connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/social_media", "postgres", "darius2002");
+                        Statement statement = connection.createStatement();
+                        ResultSet rs = statement.executeQuery(idQ);
+                        while (rs.next()) {
+                            id += rs.getInt("user_id");
+
+                        }
+                        connection.close();
+                    } catch (ClassNotFoundException | SQLException ex) {
+                        ex.printStackTrace();
+                        //throw new RuntimeException(ex);
+                    }
+                    //System.out.println(id);
+                    String query = "insert into \"public\".\"user\" values(" + id + ", '" + lastName.getText() + "', '" + firstName.getText() + "'," +
+                            "to_date('" + datepicker.getDayField().getText() + "." + datepicker.getMonthField().getText() + "." +
+                            datepicker.getYearField().getText() + "', 'DD.MM.YYYY'), '" + sex.getSelectedItem() + "', '" +
+                            email.getText() + "', '" + password.getText() + "');";
+                    try {
+                        Class.forName("org.postgresql.Driver");
+                        Connection connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/social_media", "postgres", "darius2002");
+                        Statement statement = connection.createStatement();
+                        statement.execute(query);
+                        connection.close();
+                    } catch (ClassNotFoundException | SQLException ex) {
+                        ex.printStackTrace();
+                        //throw new RuntimeException(ex);
+                    }
+                    JOptionPane.showMessageDialog(null, "Account created! Welcome here!");
                 }
             }
         };
@@ -372,7 +389,7 @@ public class LogIn extends JPanel {
         c.gridx=x;
         c.gridy=y;
     }
-
+/*
     public static void main(String []arg){
         JFrame fram=new JFrame();
         fram.setLayout(new GridBagLayout());
@@ -380,6 +397,38 @@ public class LogIn extends JPanel {
         LogIn panel=new LogIn();
         fram.add(panel);
         fram.setVisible(true);
+    }*/
+
+    public JButton getLogIn() {
+        return logIn;
+    }
+
+    public void setLogIn(JButton logIn) {
+        this.logIn = logIn;
+    }
+
+    public JButton getSignUp() {
+        return signUp;
+    }
+
+    public void setSignUp(JButton signUp) {
+        this.signUp = signUp;
+    }
+
+    public JTextField getEmailLog() {
+        return emailLog;
+    }
+
+    public void setEmailLog(JTextField emailLog) {
+        this.emailLog = emailLog;
+    }
+
+    public JPasswordField getPasswordLog() {
+        return passwordLog;
+    }
+
+    public void setPasswordLog(JPasswordField passwordLog) {
+        this.passwordLog = passwordLog;
     }
 
 }
