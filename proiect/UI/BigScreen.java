@@ -16,7 +16,7 @@ public class BigScreen extends JFrame {
     LogIn main=new LogIn();
     Home home;
     Messages messages=new Messages();
-    Profile profile=new Profile();
+    Profile profile=new Profile(userID);
     public BigScreen(){
         setup();
 
@@ -38,7 +38,7 @@ public class BigScreen extends JFrame {
         topNav.getHome().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if(userID==0)
+                if(home.ID==0)
                     home=new Home(userID);
                 home.setVisible(true);
                 messages.setVisible(false);
@@ -48,7 +48,7 @@ public class BigScreen extends JFrame {
         topNav.getMessages().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if(userID==0)
+                if(home.ID==0)
                     home=new Home(userID);
                 home.setVisible(false);
                 messages.setVisible(true);
@@ -60,48 +60,51 @@ public class BigScreen extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 home.setVisible(false);
                 messages.setVisible(false);
+                if(profile.ID==0)
+                    profile=new Profile(userID);
                 profile.setVisible(true);
             }
         });
-        topNav.getConfirm().addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                JFrame searchPerson=new JFrame();
-                searchPerson.setSize(500,900);
-                searchPerson.setLayout(new GridLayout(20,1));
-                searchPerson.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-                int length=topNav.getSearch().getText().length();
-                int posSpace=topNav.getSearch().getText().indexOf(" ");
-                try {
-                    String query="Select user_id as id, nume as lastname, prenume as firstname, data_nasteri as birthday from \"user\"" +
-                            " where nume like '%"+topNav.getSearch().getText()+"%' or " +
-                            " prenume like '%"+topNav.getSearch().getText()+"%' ";
-                    if(posSpace!=-1 && length>posSpace){
-                        query= query.concat("  or (nume like '%"+topNav.getSearch().getText().substring(0,posSpace-1)+"%' and prenume like '%" +
-                                topNav.getSearch().getText().substring(posSpace+1)+"%') or " +
-                                " prenume like '%"+topNav.getSearch().getText().substring(0,posSpace-1)+"%' and nume like '%"+
-                                topNav.getSearch().getText().substring(posSpace+1)+"%'");
-                    }
-                    //JOptionPane.showMessageDialog(null, query);
-                    Class.forName("org.postgresql.Driver");
-                    Connection connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/social_media", "postgres", "darius2002");
-                    Statement statement = connection.createStatement();
-                    ResultSet rs = statement.executeQuery(query);
-                    while(rs.next()) {
-                        ProfileSearched person=new ProfileSearched(userID,rs.getInt("id"), rs.getString("firstname"),
-                                rs.getString("lastname"), rs.getDate("birthday").toString());
-                        searchPerson.add(person);
-                    }
-                    connection.close();
-                } catch ( ClassNotFoundException | SQLException ex) {
-                    //throw new RuntimeException(ex);
-                    ex.printStackTrace();
-                }
-                searchPerson.setVisible(true);
-            }
-        });
+        topNav.getConfirm().addActionListener(searching());
         home.setContent(new ViewPost(userID));
         setVisible(true);
+    }
+
+    private ActionListener searching(){
+        return e -> {
+            JFrame searchPerson=new JFrame();
+            searchPerson.setSize(500,900);
+            searchPerson.setLayout(new GridLayout(20,1));
+            searchPerson.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+            int length=topNav.getSearch().getText().length();
+            int posSpace=topNav.getSearch().getText().indexOf(" ");
+            try {
+                String query="Select user_id as id, nume as lastname, prenume as firstname, data_nasteri as birthday from \"user\"" +
+                        " where nume like '%"+topNav.getSearch().getText()+"%' or " +
+                        " prenume like '%"+topNav.getSearch().getText()+"%' ";
+                if(posSpace!=-1 && length>posSpace){
+                    query= query.concat("  or (nume like '%"+topNav.getSearch().getText().substring(0,posSpace-1)+"%' and prenume like '%" +
+                            topNav.getSearch().getText().substring(posSpace+1)+"%') or " +
+                            " prenume like '%"+topNav.getSearch().getText().substring(0,posSpace-1)+"%' and nume like '%"+
+                            topNav.getSearch().getText().substring(posSpace+1)+"%'");
+                }
+                //JOptionPane.showMessageDialog(null, query);
+                Class.forName("org.postgresql.Driver");
+                Connection connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/social_media", "postgres", "darius2002");
+                Statement statement = connection.createStatement();
+                ResultSet rs = statement.executeQuery(query);
+                while(rs.next()) {
+                    ProfileSearched person=new ProfileSearched(userID,rs.getInt("id"), rs.getString("firstname"),
+                            rs.getString("lastname"), rs.getDate("birthday").toString());
+                    searchPerson.add(person);
+                }
+                connection.close();
+            } catch ( ClassNotFoundException | SQLException ex) {
+                //throw new RuntimeException(ex);
+                ex.printStackTrace();
+            }
+            searchPerson.setVisible(true);
+        };
     }
     private ActionListener logInAction(GridBagConstraints gbc){
         return e ->
@@ -130,8 +133,11 @@ public class BigScreen extends JFrame {
                     //home=new Home(userID);
                     gbc.gridy=2;
                     home=new Home(userID);
+                    profile=new Profile(userID);
                     add(home, gbc);
                     home.setVisible(true);
+                    add(profile,gbc);
+                    profile.setVisible(false);
                     query= "Select nume as lname, prenume as fname from social_media.public.\"user\" where user_id="+ userID;
                     try {
                         Class.forName("org.postgresql.Driver");

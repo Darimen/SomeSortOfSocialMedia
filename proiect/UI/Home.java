@@ -24,6 +24,7 @@ public class Home extends JPanel {
         c.weightx=1.0;
         c.weighty=0.6;
         content=new ViewPost(userId);
+        content.setPreferredSize(new Dimension(500,600));
         content.setVisible(true);
         content.setSize(800,500);
         add(content, c);

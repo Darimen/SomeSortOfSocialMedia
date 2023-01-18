@@ -2,10 +2,7 @@ package UI;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
+import java.awt.event.*;
 import java.sql.*;
 import java.util.Objects;
 
@@ -41,263 +38,97 @@ public class LogIn extends JPanel {
         setGBC(c,1,1,1, 1);
         //emailLog.setPreferredSize(new Dimension(20, 10));
         add(emailLog,c);
-        emailLog.addMouseListener(new MouseListener() {
+        emailLog.addFocusListener(new FocusListener() {
             @Override
-            public void mouseClicked(MouseEvent e) {
-                if(Objects.equals(emailLog.getText(), "email")) {
+            public void focusGained(FocusEvent e) {
+                if(Objects.equals(emailLog.getText(), "email")){
                     emailLog.setText("");
                 }
-                if(Objects.equals(passwordLog.getText(), "")){
-                    passwordLog.setText("password");
-                }
-                if(Objects.equals(password.getText(), "")){
-                    password.setText("password");
-                }
-                if(Objects.equals(firstName.getText(), "")){
-                    firstName.setText("first name");
-                }
-                if(Objects.equals(lastName.getText(), "")){
-                    lastName.setText("last name");
-                }
-                if(Objects.equals(email.getText(), "")){
-                    email.setText("email");
-                }
             }
 
             @Override
-            public void mousePressed(MouseEvent e) {
-            }
-
-            @Override
-            public void mouseReleased(MouseEvent e) {
-
-            }
-
-            @Override
-            public void mouseEntered(MouseEvent e) {
-
-            }
-
-            @Override
-            public void mouseExited(MouseEvent e) {
-
+            public void focusLost(FocusEvent e) {
+                if(Objects.equals(emailLog.getText(), "")){
+                    emailLog.setText("email");
+                }
             }
         });
-        email.addMouseListener(new MouseListener() {
+        email.addFocusListener(new FocusListener() {
             @Override
-            public void mouseClicked(MouseEvent e) {
-                if(Objects.equals(emailLog.getText(), "")) {
-                    email.setText("email");
-                }
-                if(Objects.equals(passwordLog.getText(), "")){
-                    passwordLog.setText("password");
-                }
-                if(Objects.equals(password.getText(), "")){
-                    password.setText("password");
-                }
-                if(Objects.equals(firstName.getText(), "")){
-                    firstName.setText("first name");
-                }
-                if(Objects.equals(lastName.getText(), "")){
-                    lastName.setText("last name");
-                }
+            public void focusGained(FocusEvent e) {
                 if(Objects.equals(email.getText(), "email")){
                     email.setText("");
                 }
             }
 
             @Override
-            public void mousePressed(MouseEvent e) {
-                email.setText("");
-            }
-
-            @Override
-            public void mouseReleased(MouseEvent e) {
-
-            }
-
-            @Override
-            public void mouseEntered(MouseEvent e) {
-
-            }
-
-            @Override
-            public void mouseExited(MouseEvent e) {
-
+            public void focusLost(FocusEvent e) {
+                if(Objects.equals(email.getText(), "")){
+                    email.setText("email");
+                }
             }
         });
-        passwordLog.addMouseListener(new MouseListener() {
+        passwordLog.addFocusListener(new FocusListener() {
             @Override
-            public void mouseClicked(MouseEvent e) {
-                if(Objects.equals(emailLog.getText(), "")) {
-                    emailLog.setText("email");
-                }
+            public void focusGained(FocusEvent e) {
                 if(Objects.equals(passwordLog.getText(), "password")){
                     passwordLog.setText("");
                 }
-                if(Objects.equals(password.getText(), "")){
-                    password.setText("password");
-                }
-                if(Objects.equals(firstName.getText(), "")){
-                    firstName.setText("first name");
-                }
-                if(Objects.equals(lastName.getText(), "")){
-                    lastName.setText("last name");
-                }
-                if(Objects.equals(email.getText(), "")){
-                    email.setText("email");
-                }
             }
 
             @Override
-            public void mousePressed(MouseEvent e) {
-
-            }
-
-            @Override
-            public void mouseReleased(MouseEvent e) {
-
-            }
-
-            @Override
-            public void mouseEntered(MouseEvent e) {
-
-            }
-
-            @Override
-            public void mouseExited(MouseEvent e) {
-
-            }
-        });
-        password.addMouseListener(new MouseListener() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                if(Objects.equals(emailLog.getText(), "")) {
-                    emailLog.setText("Email");
-                }
+            public void focusLost(FocusEvent e) {
                 if(Objects.equals(passwordLog.getText(), "")){
                     passwordLog.setText("password");
                 }
+            }
+        });
+        password.addFocusListener(new FocusListener() {
+            @Override
+            public void focusGained(FocusEvent e) {
                 if(Objects.equals(password.getText(), "password")){
                     password.setText("");
                 }
-                if(Objects.equals(firstName.getText(), "")){
-                    firstName.setText("first name");
-                }
-                if(Objects.equals(lastName.getText(), "")){
-                    lastName.setText("last name");
-                }
-                if(Objects.equals(email.getText(), "")){
-                    email.setText("email");
-                }
             }
 
             @Override
-            public void mousePressed(MouseEvent e) {
-
-            }
-
-            @Override
-            public void mouseReleased(MouseEvent e) {
-
-            }
-
-            @Override
-            public void mouseEntered(MouseEvent e) {
-
-            }
-
-            @Override
-            public void mouseExited(MouseEvent e) {
-
-            }
-        });
-        firstName.addMouseListener(new MouseListener() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                if(Objects.equals(emailLog.getText(), "")) {
-                    emailLog.setText("Email");
-                }
-                if(Objects.equals(passwordLog.getText(), "")){
-                    passwordLog.setText("password");
-                }
+            public void focusLost(FocusEvent e) {
                 if(Objects.equals(password.getText(), "")){
                     password.setText("password");
                 }
+            }
+        });
+        firstName.addFocusListener(new FocusListener() {
+            @Override
+            public void focusGained(FocusEvent e) {
                 if(Objects.equals(firstName.getText(), "first name")){
                     firstName.setText("");
                 }
-                if(Objects.equals(lastName.getText(), "")){
-                    lastName.setText("last name");
-                }
-                if(Objects.equals(email.getText(), "")){
-                    email.setText("email");
-                }
             }
 
             @Override
-            public void mousePressed(MouseEvent e) {
-
-            }
-
-            @Override
-            public void mouseReleased(MouseEvent e) {
-
-            }
-
-            @Override
-            public void mouseEntered(MouseEvent e) {
-
-            }
-
-            @Override
-            public void mouseExited(MouseEvent e) {
-
-            }
-        });
-        lastName.addMouseListener(new MouseListener() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                if(Objects.equals(emailLog.getText(), "")) {
-                    emailLog.setText("Email");
-                }
-                if(Objects.equals(passwordLog.getText(), "")){
-                    passwordLog.setText("password");
-                }
-                if(Objects.equals(password.getText(), "")){
-                    password.setText("password");
-                }
+            public void focusLost(FocusEvent e) {
                 if(Objects.equals(firstName.getText(), "")){
                     firstName.setText("first name");
                 }
+            }
+        });
+        lastName.addFocusListener(new FocusListener() {
+            @Override
+            public void focusGained(FocusEvent e) {
                 if(Objects.equals(lastName.getText(), "last name")){
                     lastName.setText("");
                 }
-                if(Objects.equals(email.getText(), "")){
-                    email.setText("email");
+            }
+
+            @Override
+            public void focusLost(FocusEvent e) {
+                if(Objects.equals(lastName.getText(), "")){
+                    lastName.setText("last name");
                 }
             }
-
-            @Override
-            public void mousePressed(MouseEvent e) {
-
-            }
-
-            @Override
-            public void mouseReleased(MouseEvent e) {
-
-            }
-
-            @Override
-            public void mouseEntered(MouseEvent e) {
-
-            }
-
-            @Override
-            public void mouseExited(MouseEvent e) {
-
-            }
         });
+
 
         setGBC(c, 2,1,1,1);
         add(passwordLog,c);
@@ -323,18 +154,24 @@ public class LogIn extends JPanel {
         add(email,c);
         c.gridx=2;
         add(password, c);
-        setGBC(c,1,5,2,1);
+        setGBC(c,1,5,1,1);
+        //add(new JLabel("Birthday:"));
+        setGBC(c,2,5,2,1);
         add(datepicker);
         c.gridx=2;
         ActionListener signUp = new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if(!email.getText().contains("@")){
+
+                 if(!email.getText().contains("@")){
                     JOptionPane.showMessageDialog(null, "Please input a valid email!");
                 }
                 else if(Objects.equals(datepicker.getYearField().getText(), "") ||Objects.equals(datepicker.getDayField().getText(), "") ||
                         Objects.equals(datepicker.getMonthField().getText(), "")){
                     JOptionPane.showMessageDialog(null, "Please input a valid date!");
+                }
+                else if(emailExisting()){
+                    JOptionPane.showMessageDialog(null, "An account already exists with this email!");
                 }
                 else {
                     int id = 1;
@@ -368,6 +205,8 @@ public class LogIn extends JPanel {
                         ex.printStackTrace();
                         //throw new RuntimeException(ex);
                     }
+                    ProfileSearched self=new ProfileSearched();
+                    self.createFriendship(id,id);
                     JOptionPane.showMessageDialog(null, "Account created! Welcome here!");
                 }
             }
@@ -431,4 +270,25 @@ public class LogIn extends JPanel {
         this.passwordLog = passwordLog;
     }
 
+    private boolean emailExisting(){
+        boolean exist=false;
+        try {
+
+            String query="select case when email='"+ email.getText()+ "' then true else false end as email from \"user\" ";
+            Class.forName("org.postgresql.Driver");
+            Connection connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/social_media", "postgres", "darius2002");
+            Statement statement = connection.createStatement();
+            ResultSet rs=statement.executeQuery(query);
+            while (rs.next()){
+                if (rs.getBoolean("email")){
+                    exist=true;
+                }
+            }
+            connection.close();
+        } catch (ClassNotFoundException | SQLException ex) {
+            ex.printStackTrace();
+            //throw new RuntimeException(ex);
+        }
+        return exist;
+    }
 }

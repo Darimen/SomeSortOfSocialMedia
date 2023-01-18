@@ -10,6 +10,9 @@ public class ProfileSearched extends JPanel {
     JButton addFriend=new JButton();
     int userID=0;
     int userID2=0;
+    public ProfileSearched(){
+
+    }
     public ProfileSearched(int u1, int u2, String firstName, String lastName, String birthday){
         userID=u1;
         userID2=u2;
@@ -32,6 +35,7 @@ public class ProfileSearched extends JPanel {
                     JOptionPane.showMessageDialog(null,"Added!");
                     addFriend.setText("Unfriend");
                     createFriendship(userID, userID2);
+                    getParent().getParent().repaint();;
                 }
                 else{
                     JOptionPane.showMessageDialog(null,"Friend removed!");
