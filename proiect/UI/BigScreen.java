@@ -10,163 +10,37 @@ public class BigScreen extends JFrame {
     int userID =0;
     TopNav topNav=new TopNav();
     String nume ="";
-    int currentID=0;
+    int descriptionID =0;
     String prenume="";
     JButton logIn=new JButton();
     LogIn main=new LogIn();
     Home home;
     Messages messages=new Messages();
-    Profile profile=new Profile(userID);
+    Profile profile=new Profile();
     public BigScreen(){
-        setBackground(new Color(0x318EFF));
-        setLayout(new GridBagLayout());
+        setup();
+
         GridBagConstraints gbc=new GridBagConstraints();
         gbc.fill=GridBagConstraints.HORIZONTAL;
-        setSize(1000,900);
-        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-
-        add(main, gbc);
+        add(main, gbc);// starts with the logIn
         home=new Home(userID);
-        ActionListener log= new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if(!main.getEmailLog().getText().contains("@")){
-                    JOptionPane.showMessageDialog(null,"please input a valid email");
-                }else{
-                    String query="Select user_id as id from \"user\" where email='"+
-                            main.getEmailLog().getText()+"' and password='"+ main.getPasswordLog().getText()+ "';";
-                    try {
-                        Class.forName("org.postgresql.Driver");
-                        Connection connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/social_media", "postgres", "darius2002");
-                        Statement statement = connection.createStatement();
-                        ResultSet rs = statement.executeQuery(query);
-                        while(rs.next())
-                            userID = rs.getInt("id");
-                        connection.close();
-                    } catch (ClassNotFoundException | SQLException ex) {
-                        JOptionPane.showMessageDialog(null,"the email or the password is wrong");
-                        ex.printStackTrace();
-                        //throw new RuntimeException(ex);
-                    }
-                    main.setVisible(false);
-                    gbc.gridy=1;
-                    add(topNav, gbc);
-                    //home=new Home(userID);
-                    gbc.gridy=2;
-                    home.refresh(userID);
-                    add(home, gbc);
-                    home.setVisible(true);
-                    query= "Select nume as lname, prenume as fname from social_media.public.\"user\" where user_id="+ userID;
-                    try {
-                        Class.forName("org.postgresql.Driver");
-                        Connection connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/social_media", "postgres", "darius2002");
-                        Statement statement = connection.createStatement();
-                        ResultSet rs = statement.executeQuery(query);
-                        while(rs.next()) {
-                            prenume=rs.getString("fname");
-                            nume=rs.getString("lname");
-                        }
-                        connection.close();
-                    } catch (ClassNotFoundException | SQLException ex) {
-                        //JOptionPane.showMessageDialog(null,"the email or the password is wrong");
-                        ex.printStackTrace();
-                        //throw new RuntimeException(ex);
-                    }
+        ActionListener log= logInAction(gbc);
 
-                    //JOptionPane.showMessageDialog(null, nume+prenume);
-                    topNav.getTitle().setText("Welcome, "+ nume+ " "+ prenume);
-                    //topNav.setVisible(true);
-                }
-            }
-        };
-        //post button
-        home.getPostArea().getPost().addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if(home.getPostArea().getDescription().getText().trim().length() != 0){
-                    int id=0;
-                    try {
-                        String query="Select max(d_id) as id from social_media.public.description;";
-                        Class.forName("org.postgresql.Driver");
-                        Connection connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/social_media", "postgres", "darius2002");
-                        Statement statement = connection.createStatement();
-                        ResultSet rs = statement.executeQuery(query);
-                        while(rs.next()) {
-                            id=rs.getInt("id");
-                        }
-                        connection.close();
-                    } catch (ClassNotFoundException | SQLException ex) {
-                        //JOptionPane.showMessageDialog(null,"the email or the password is wrong");
-                        ex.printStackTrace();
-                        //throw new RuntimeException(ex);
-                    }
-                    currentID=id; // get id of description
-                    id++;
-                    try {//insert the description
-                        String query="INSERT INTO social_media.public.description VALUES ("+ id+ ", " +
-                                userID+ ", '"+home.getPostArea().getDescription().getText()+"', "+
-                                home.getPostArea().getDescription().getForeground().getRGB()+ ")";
-                        Class.forName("org.postgresql.Driver");
-                        Connection connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/social_media", "postgres", "darius2002");
-                        Statement statement = connection.createStatement();
-                        statement.executeUpdate(query);
-                        connection.close();
-                    } catch (ClassNotFoundException | SQLException ex) {
-                        ex.printStackTrace();
-                    }
-
-                    try {// get an id for post
-                        String query="Select max(post_id) as id from social_media.public.post;";
-                        Class.forName("org.postgresql.Driver");
-                        Connection connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/social_media", "postgres", "darius2002");
-                        Statement statement = connection.createStatement();
-                        ResultSet rs = statement.executeQuery(query);
-                        while(rs.next()) {
-                            id=rs.getInt("id");
-                        }
-                        connection.close();
-                    } catch (ClassNotFoundException | SQLException ex) {
-                        //JOptionPane.showMessageDialog(null,"the email or the password is wrong");
-                        ex.printStackTrace();
-                        //throw new RuntimeException(ex);
-                    }
-                    id++;
-                    currentID++;
-
-                    try { // Create the post
-                        String query="INSERT INTO social_media.public.post VALUES ("+ id+ ", " +
-                                currentID+ ", null, null, "+ userID+ ")";
-
-                        Class.forName("org.postgresql.Driver");
-                        Connection connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/social_media", "postgres", "darius2002");
-                        Statement statement = connection.createStatement();
-                        statement.executeUpdate(query);
-                        connection.close();
-                    } catch (ClassNotFoundException | SQLException ex) {
-                        ex.printStackTrace();
-                    }
-                }
-                else {
-                    JOptionPane.showMessageDialog(null,"There is nothing to be posted");
-                }
-            }
-        });
-
+        //adds the action of posting to home;
         main.getLogIn().addActionListener(log);
-        home.setVisible(false);
-        messages.setVisible(false);
-        profile.setVisible(false);
+        home.getPostArea().getPost().addActionListener(posting(gbc));
         gbc.gridy=2;
-
         add(home,gbc);
         add(messages, gbc);
         add(profile, gbc);
+        hideAccount(); // hides everything that's now the login form
+
         topNav.getHome().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                home.refresh(userID);
+                if(userID==0)
+                    home=new Home(userID);
                 home.setVisible(true);
-                home.repaint();
                 messages.setVisible(false);
                 profile.setVisible(false);
             }
@@ -174,6 +48,8 @@ public class BigScreen extends JFrame {
         topNav.getMessages().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                if(userID==0)
+                    home=new Home(userID);
                 home.setVisible(false);
                 messages.setVisible(true);
                 profile.setVisible(false);
@@ -226,5 +102,142 @@ public class BigScreen extends JFrame {
         });
         home.setContent(new ViewPost(userID));
         setVisible(true);
+    }
+    private ActionListener logInAction(GridBagConstraints gbc){
+        return e ->
+            {
+                if(!main.getEmailLog().getText().contains("@")){
+                    JOptionPane.showMessageDialog(null,"please input a valid email");
+                }else{
+                    String query="Select user_id as id from \"user\" where email='"+
+                            main.getEmailLog().getText()+"' and password='"+ main.getPasswordLog().getText()+ "';";
+                    try {
+                        Class.forName("org.postgresql.Driver");
+                        Connection connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/social_media", "postgres", "darius2002");
+                        Statement statement = connection.createStatement();
+                        ResultSet rs = statement.executeQuery(query);
+                        while(rs.next())
+                            userID = rs.getInt("id");
+                        connection.close();
+                    } catch (ClassNotFoundException | SQLException ex) {
+                        JOptionPane.showMessageDialog(null,"the email or the password is wrong");
+                        ex.printStackTrace();
+                        //throw new RuntimeException(ex);
+                    }
+                    main.setVisible(false);
+                    gbc.gridy=1;
+                    add(topNav, gbc);
+                    //home=new Home(userID);
+                    gbc.gridy=2;
+                    home=new Home(userID);
+                    add(home, gbc);
+                    home.setVisible(true);
+                    query= "Select nume as lname, prenume as fname from social_media.public.\"user\" where user_id="+ userID;
+                    try {
+                        Class.forName("org.postgresql.Driver");
+                        Connection connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/social_media", "postgres", "darius2002");
+                        Statement statement = connection.createStatement();
+                        ResultSet rs = statement.executeQuery(query);
+                        while(rs.next()) {
+                            prenume=rs.getString("fname");
+                            nume=rs.getString("lname");
+                        }
+                        connection.close();
+                    } catch (ClassNotFoundException | SQLException ex) {
+                        //JOptionPane.showMessageDialog(null,"the email or the password is wrong");
+                        ex.printStackTrace();
+                        //throw new RuntimeException(ex);
+                    }
+
+                    //JOptionPane.showMessageDialog(null, nume+prenume);
+                    topNav.getTitle().setText("Welcome, "+ nume+ " "+ prenume);
+                    //topNav.setVisible(true);
+                }
+            };
+
+    }
+
+    private void setup(){
+        setLayout(new GridBagLayout());
+        setSize(1000,900);
+        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        getContentPane().setBackground(new Color(0x318EFF));
+    }
+
+    private ActionListener posting(GridBagConstraints gbc){
+        return e->{{
+            if(home.getPostArea().getDescription().getText().trim().length() != 0){
+                int id=0;
+                try {
+                    String query="Select max(d_id) as id from social_media.public.description;";
+                    Class.forName("org.postgresql.Driver");
+                    Connection connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/social_media", "postgres", "darius2002");
+                    Statement statement = connection.createStatement();
+                    ResultSet rs = statement.executeQuery(query);
+                    while(rs.next()) {
+                        id=rs.getInt("id");
+                    }
+                    connection.close();
+                } catch (ClassNotFoundException | SQLException ex) {
+                    //JOptionPane.showMessageDialog(null,"the email or the password is wrong");
+                    ex.printStackTrace();
+                    //throw new RuntimeException(ex);
+                }
+                descriptionID =id; // get id of description
+                id++;
+                try {//insert the description
+                    String query="INSERT INTO social_media.public.description VALUES ("+ id+ ", " +
+                            userID+ ", '"+home.getPostArea().getDescription().getText()+"', "+
+                            home.getPostArea().getDescription().getForeground().getRGB()+ ")";
+                    Class.forName("org.postgresql.Driver");
+                    Connection connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/social_media", "postgres", "darius2002");
+                    Statement statement = connection.createStatement();
+                    statement.executeUpdate(query);
+                    connection.close();
+                } catch (ClassNotFoundException | SQLException ex) {
+                    ex.printStackTrace();
+                }
+
+                try {// get an id for post
+                    String query="Select max(post_id) as id from social_media.public.post;";
+                    Class.forName("org.postgresql.Driver");
+                    Connection connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/social_media", "postgres", "darius2002");
+                    Statement statement = connection.createStatement();
+                    ResultSet rs = statement.executeQuery(query);
+                    while(rs.next()) {
+                        id=rs.getInt("id");
+                    }
+                    connection.close();
+                } catch (ClassNotFoundException | SQLException ex) {
+                    //JOptionPane.showMessageDialog(null,"the email or the password is wrong");
+                    ex.printStackTrace();
+                    //throw new RuntimeException(ex);
+                }
+                id++;
+                descriptionID++;
+
+                try { // Create the post
+                    String query="INSERT INTO social_media.public.post VALUES ("+ id+ ", " +
+                            descriptionID + ", null, null, "+ userID+ ")";
+
+                    Class.forName("org.postgresql.Driver");
+                    Connection connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/social_media", "postgres", "darius2002");
+                    Statement statement = connection.createStatement();
+                    statement.executeUpdate(query);
+                    connection.close();
+                } catch (ClassNotFoundException | SQLException ex) {
+                    ex.printStackTrace();
+                }
+            }
+            else {
+                JOptionPane.showMessageDialog(null,"There is nothing to be posted");
+            }
+        }
+        };
+    }
+    private void hideAccount(){
+        home.setVisible(false);
+        messages.setVisible(false);
+        profile.setVisible(false);
     }
 }

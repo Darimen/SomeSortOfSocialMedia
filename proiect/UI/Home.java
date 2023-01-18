@@ -4,28 +4,33 @@ import javax.swing.*;
 import java.awt.*;
 
 public class Home extends JPanel {
+    int ID;
     Post postArea=new Post();
     ViewPost content;
     public Home(int userId){
+        ID=userId;
 
         setLayout(new GridBagLayout());
-        setSize(500,500);
+        setSize(800,500);
         GridBagConstraints c=new GridBagConstraints();
+        c.fill=GridBagConstraints.BOTH;
+        //c.anchor=GridBagConstraints.NORTH;
         c.weightx=1.0;
-        c.weighty=0.2;
+        c.weighty=0.4;
         add(postArea, c);
-
-        content=new ViewPost(userId);
-        c.gridy=2;
+        //.anchor=GridBagConstraints.CENTER;
+        //content=new ViewPost(userId);
+        c.gridy=1;
         c.weightx=1.0;
-        c.weighty=0.8;
+        c.weighty=0.6;
+        content=new ViewPost(userId);
+        content.setVisible(true);
+        content.setSize(800,500);
         add(content, c);
     }
 
     public void refresh(int userID){
-        GridBagConstraints c=new GridBagConstraints();
-        content=new ViewPost(userID);
-        content.setVisible(true);
+
     }
 
     public Post getPostArea() {

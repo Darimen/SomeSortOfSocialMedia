@@ -9,18 +9,28 @@ public class ViewPost extends JPanel {
 
     public ViewPost(int userID){
         setLayout(new GridLayout(15,1));
-        setSize(600,800);
+        setSize(600,400);
         int[]posters=personFriend(userID);
+        int index=0;
         for (int poster : posters) {
-            Description[] descriptions = findDescription(poster);
-            int index = 0;
-            String name = findName(userID);
-            if(descriptions.length>0){
-                add(new PostFrame(name, descriptions[index].getDescription(), descriptions[index].rgb));
+            //System.out.println(poster);
+            Description[] descriptions=new Description[5];
+            descriptions = findDescription(poster);
+            for(int j=0; j<descriptions.length;j++){
+                String name = findName(poster);
+                index++;
+                //System.out.println(name);
+                add(new PostFrame(name, descriptions[j].getDescription(), descriptions[j].rgb));
             }
         }
     }
-
+    public static void main(String [] args){
+        JFrame frame=new JFrame();
+        frame.setSize(800,900);
+        frame.add(new ViewPost(2));
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setVisible(true);
+    }
     public int[] personFriend(int user){
         String query="SELECT case when user1="+user+" then user2 else case when user2="+user+ " then user1 else null end end as poster from friends   ;";
         ArrayList<Integer> person=new ArrayList<>();

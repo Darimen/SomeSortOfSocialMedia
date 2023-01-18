@@ -10,16 +10,17 @@ public class PostFrame extends JPanel {
     JButton sup=new JButton("like");
     JButton comment=new JButton("comment");
     public PostFrame(String poster, String description, Color RGB){
-        setSize(400,80);
+        setSize(400,150);
         setLayout(new GridBagLayout());
         GridBagConstraints c= new GridBagConstraints();
+        c.fill=GridBagConstraints.HORIZONTAL;
         add(new JLabel(poster),c);
         JTextArea post=new JTextArea(description);
         post.setLineWrap(true);
         post.setForeground(RGB);
         post.setEditable(false);
-        c.fill=GridBagConstraints.HORIZONTAL;
         c.gridy=2;
+        c.gridwidth=2;
         add(post,c);
         c.gridy=3;
         add(sup,c);

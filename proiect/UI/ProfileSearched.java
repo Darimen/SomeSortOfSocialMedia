@@ -29,10 +29,12 @@ public class ProfileSearched extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if(!existingFriendship(userID, userID2)){
+                    JOptionPane.showMessageDialog(null,"Added!");
                     addFriend.setText("Unfriend");
                     createFriendship(userID, userID2);
                 }
                 else{
+                    JOptionPane.showMessageDialog(null,"Friend removed!");
                     addFriend.setText("Add Friend");
                     deleteFriendship(userID,userID2);
                 }
