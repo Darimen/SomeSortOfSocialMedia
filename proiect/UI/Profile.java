@@ -4,6 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
 import java.sql.*;
+import java.util.ArrayList;
 
 public class Profile extends JPanel {
     int ID;
@@ -18,7 +19,7 @@ public class Profile extends JPanel {
         c.fill=GridBagConstraints.HORIZONTAL;
         me.setLayout(new GridBagLayout());
         me.setSize(600, 300);
-        me.setPreferredSize(new Dimension(600,300));
+        me.setPreferredSize(new Dimension(600,100));
         c.gridx=1;
         c.gridwidth=1;
         me.add(new JLabel("YOUR NAME:"),c);
@@ -48,7 +49,42 @@ public class Profile extends JPanel {
         delete.addActionListener(delete());
         me.add(delete);
         add(me);
+        Description[] descriptions=new Description[5];
+        descriptions = findDescription(ID);
+        int totalHeight=0;
+        c.gridx=0;
+        for(int j=0; j<descriptions.length;j++){
+            PostFrame posting=new PostFrame(getUser(ID), descriptions[j].getDescription(), descriptions[j].rgb);
+            totalHeight+=posting.getHeight();
+            c.gridy++;
+            add(posting,c);
+            if(totalHeight>1000){
+                break;
+            }
+        }
+
+
         //setVisible(true);
+    }
+    public void refresh(){
+        GridBagConstraints c=new GridBagConstraints();
+        c.fill=GridBagConstraints.HORIZONTAL;
+        c.gridy=3;
+        c.gridx=2;
+        c.gridwidth=2;
+        Description[] descriptions=new Description[5];
+        descriptions = findDescription(ID);
+        int totalHeight=0;
+        c.gridx=0;
+        for(int j=0; j<descriptions.length;j++){
+            PostFrame posting=new PostFrame(getUser(ID), descriptions[j].getDescription(), descriptions[j].rgb);
+            totalHeight+=posting.getHeight();
+            c.gridy++;
+            add(posting,c);
+            if(totalHeight>800){
+                break;
+            }
+        }
     }
 
     private String getUser(int id){
@@ -135,5 +171,36 @@ public class Profile extends JPanel {
                 System.exit(0);
             }
         };
+    }
+
+
+    public Description[] findDescription(int user){
+        ArrayList<String> descriptions=new ArrayList<>();
+        ArrayList<Color> rgb=new ArrayList<>();
+        String query="select description as description, \"colorRGB\" as rgb from post join description d on d.d_id = post.description_id" +
+                " join \"user\" u on u.user_id = d.user_id where u.user_id="+ user+" order by post_id";
+        try {
+            Class.forName("org.postgresql.Driver");
+            Connection connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/social_media", "postgres", "darius2002");
+            Statement statement = connection.createStatement();
+            ResultSet rs=statement.executeQuery(query);
+            while (rs.next()) {
+                descriptions.add(rs.getString("description"));
+                rgb.add(new Color(rs.getInt("rgb")));
+            }
+        } catch (ClassNotFoundException | SQLException ex) {
+            ex.printStackTrace();
+        }
+
+        Description []description=new Description[descriptions.size()];
+        for(int i=0; i<description.length; i++){
+            description[i]=new Description();
+        }
+
+        for(int i=0; i<description.length; i++){
+            description[i].setDescription(descriptions.get(i));
+            description[i].setRgb(rgb.get(i));
+        }
+        return description;
     }
 }

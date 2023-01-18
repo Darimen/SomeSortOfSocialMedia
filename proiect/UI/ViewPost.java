@@ -16,6 +16,7 @@
             //scroll.setLayout(new ScrollPaneLayout());
             scroll.setPreferredSize(new Dimension(500,600));
             scroll.setMinimumSize(new Dimension(500,300));
+
             for (int poster : posters) {
                 //System.out.println(poster);
                 Description[] descriptions=new Description[5];
@@ -26,7 +27,7 @@
                     PostFrame posting=new PostFrame(name, descriptions[j].getDescription(), descriptions[j].rgb);
                     //System.out.println(name);
                     totalHeight+=posting.getHeight();
-                    add(posting);
+                    add(posting, new Insets(5,10,5,10));
                     if(totalHeight>400){
                         break;
                     }

@@ -219,7 +219,6 @@ public class LogIn extends JPanel {
         add(this.signUp, c);
 
         setVisible(true);
-
     }
 
     public void setGBC(GridBagConstraints c,int x, int y, int w, int h){

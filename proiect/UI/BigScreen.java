@@ -38,9 +38,12 @@ public class BigScreen extends JFrame {
         topNav.getHome().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if(home.ID==0)
-                    home=new Home(userID);
+                if(home.ID==0) {
+                    home = new Home(userID);
+                    home.getPostArea().getPost().addActionListener(posting(gbc));
+                }
                 home.setVisible(true);
+                home.refresh();
                 messages.setVisible(false);
                 profile.setVisible(false);
             }
@@ -48,8 +51,10 @@ public class BigScreen extends JFrame {
         topNav.getMessages().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if(home.ID==0)
-                    home=new Home(userID);
+                if(home.ID==0) {
+                    home = new Home(userID);
+                    home.getPostArea().getPost().addActionListener(posting(gbc));
+                }
                 home.setVisible(false);
                 messages.setVisible(true);
                 profile.setVisible(false);
@@ -60,9 +65,12 @@ public class BigScreen extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 home.setVisible(false);
                 messages.setVisible(false);
-                if(profile.ID==0)
-                    profile=new Profile(userID);
+                if(profile.ID==0) {
+                    profile = new Profile(userID);
+                    home.getPostArea().getPost().addActionListener(posting(gbc));
+                }
                 profile.setVisible(true);
+                profile.refresh();
             }
         });
         topNav.getConfirm().addActionListener(searching());
@@ -134,6 +142,7 @@ public class BigScreen extends JFrame {
                     gbc.gridy=2;
                     home=new Home(userID);
                     profile=new Profile(userID);
+                    home.getPostArea().getPost().addActionListener(posting(gbc));
                     add(home, gbc);
                     home.setVisible(true);
                     add(profile,gbc);
