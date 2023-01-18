@@ -11,7 +11,7 @@ import java.util.Objects;
 
 
 public class LogIn extends JPanel {
-    //DatabaseCon db=new DatabaseCon();
+
 
     JButton logIn=new JButton("LogIN");
     JButton signUp= new JButton("SignUP");

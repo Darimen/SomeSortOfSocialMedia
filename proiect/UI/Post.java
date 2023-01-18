@@ -4,8 +4,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.sql.*;
-import java.util.Objects;
 
 public class Post extends JPanel {
     JButton post=new JButton("Post");
@@ -46,7 +44,7 @@ public class Post extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 JOptionPane.showMessageDialog(null,"This feature is not implemented yet.");
-                JOptionPane.showMessageDialog(null,description.getForeground());
+                //JOptionPane.showMessageDialog(null,description.getForeground());
             }
         };
 

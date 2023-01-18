@@ -1,11 +1,15 @@
 package UI;
 
 import javax.swing.*;
+import javax.swing.text.BadLocationException;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
+import java.sql.*;
+import java.time.Period;
+import java.util.ArrayList;
 
 public class TopNav extends JPanel {
     JButton home=new JButton("Home");
@@ -15,9 +19,6 @@ public class TopNav extends JPanel {
     JTextField search=new JTextField("search");
     ImageIcon icon=new ImageIcon("magnifying glass.png");
     JButton confirm;
-    Profile prof=new Profile();
-    Messages msg=new Messages();
-    Home hm=new Home();
     public TopNav(){
         setLayout(new FlowLayout());
         setSize(new Dimension(900, 30));
@@ -41,32 +42,12 @@ public class TopNav extends JPanel {
             }
         });
 
-        home.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                hm.setVisible(true);
-                msg.setVisible(false);
-                prof.setVisible(false);
-            }
-        });
-
         Image image=icon.getImage();
         Image newImage=image.getScaledInstance(15,15, Image.SCALE_SMOOTH);
         ImageIcon buton=new ImageIcon(newImage);
         confirm=new JButton(buton);
         add(confirm);
-        confirm.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                JFrame search=new JFrame();
-                search.setSize(500,500);
-                search.setLayout(new GridLayout(40,1));
-                search.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
-                search.setVisible(true);
-
-            }
-        });
 
         add(messages);
         add(profile);
@@ -106,29 +87,6 @@ public class TopNav extends JPanel {
         this.title = title;
     }
 
-    public Profile getProf() {
-        return prof;
-    }
-
-    public void setProf(Profile prof) {
-        this.prof = prof;
-    }
-
-    public Messages getMsg() {
-        return msg;
-    }
-
-    public void setMsg(Messages msg) {
-        this.msg = msg;
-    }
-
-    public Home getHm() {
-        return hm;
-    }
-
-    public void setHm(Home hm) {
-        this.hm = hm;
-    }
     public static void main(String [] arg){
         JFrame frame=new JFrame();
         frame.setSize(100,100);
@@ -136,4 +94,27 @@ public class TopNav extends JPanel {
         frame.setVisible(true);
     }
 
+    public JTextField getSearch() {
+        return search;
+    }
+
+    public void setSearch(JTextField search) {
+        this.search = search;
+    }
+
+    public ImageIcon getIcon() {
+        return icon;
+    }
+
+    public void setIcon(ImageIcon icon) {
+        this.icon = icon;
+    }
+
+    public JButton getConfirm() {
+        return confirm;
+    }
+
+    public void setConfirm(JButton confirm) {
+        this.confirm = confirm;
+    }
 }
