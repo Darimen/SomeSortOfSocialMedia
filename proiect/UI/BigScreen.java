@@ -177,6 +177,7 @@ public class BigScreen extends JFrame {
         setSize(1000,900);
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         getContentPane().setBackground(new Color(0x318EFF));
+        setTitle("Social Media");
     }
 
     private ActionListener posting(GridBagConstraints gbc){

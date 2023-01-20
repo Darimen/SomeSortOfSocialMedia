@@ -11,12 +11,6 @@
             setLayout(new GridLayout(8,1));
             setSize(600,300);
             int[]posters=personFriend(userID);
-            JScrollPane scroll=new JScrollPane();
-            ArrayList<PostFrame> postari=new ArrayList<>();
-            //scroll.setLayout(new ScrollPaneLayout());
-            scroll.setPreferredSize(new Dimension(500,600));
-            scroll.setMinimumSize(new Dimension(500,300));
-
             for (int poster : posters) {
                 //System.out.println(poster);
                 Description[] descriptions=new Description[5];
@@ -32,15 +26,6 @@
                         break;
                     }
                 }
-                Scrollbar scrollbar=new Scrollbar(Scrollbar.VERTICAL);
-                scroll.add(scrollbar);
-                for(int i=0; i<postari.size();i++){
-                    scroll.add(postari.get(i));
-                }
-                scroll.setPreferredSize(new Dimension(500,600));
-                scroll.setSize(new Dimension(500,600));
-                scroll.setMinimumSize(new Dimension(500,600));
-                //add(scroll);
             }
         }
         public static void main(String [] args){

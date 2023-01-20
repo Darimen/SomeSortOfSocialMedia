@@ -206,7 +206,8 @@ public class LogIn extends JPanel {
                         //throw new RuntimeException(ex);
                     }
                     ProfileSearched self=new ProfileSearched();
-                    self.createFriendship(id,id);
+                    if(id!=0)
+                        self.createFriendship(id,id);
                     JOptionPane.showMessageDialog(null, "Account created! Welcome here!");
                 }
             }
